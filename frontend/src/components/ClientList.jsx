@@ -19,12 +19,12 @@ const ClientList = () => {
   const reload = () => window.location.reload;
   const [error, setError] = useState(null);
   const [formErrors, setFormErrors] = useState({});
+  const token = localStorage.getItem('jwtToken');
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
-      const token = localStorage.getItem('jwtToken');
 
       try {
         const response = await axios.get(
@@ -72,14 +72,20 @@ const ClientList = () => {
 
       if (Object.keys(validationErrors).length === 0) {
         try {
+          console.log(token);
           const response = await axios.put(
             `http://localhost:2808/api/client/${edit_id}`,
-            formData
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
           console.log("Client Data Updated", response.data);
         } catch (err) {
           console.error("Error deleting client:", err);
-          setError("Failed to delete client. Please try again later.");
+          setError("Failed to update client. Please try again later.");
         } finally {
           setFormData({
             name: "",
@@ -106,7 +112,12 @@ const ClientList = () => {
     if (window.confirm("Are you sure you want to delete this client?")) {
       try {
         const response = await axios.delete(
-          `http://localhost:2808/api/client/${id}`
+          `http://localhost:2808/api/client/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         console.log("Client Deleted", response.data);
         setClientData(clientData.filter((client) => client.id !== id));

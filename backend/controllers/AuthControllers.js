@@ -21,7 +21,7 @@ const login = async (req, res) => {
     }
 
     const payload = { id: admin.id };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(payload, process.env.JWT_SECRET);
     res.status(200).json({ message: "Login Successful!", token });
   } catch (err) {
     console.error("Error logging in admin:", err);

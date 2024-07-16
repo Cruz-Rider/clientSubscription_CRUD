@@ -15,6 +15,7 @@ const ClientMaster = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const token = localStorage.getItem('jwtToken');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,7 +55,12 @@ const ClientMaster = () => {
       try {
         const response = await axios.post(
           "http://localhost:2808/api/client",
-          formData
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         console.log("Client Added Successfully", response.data);
         navigate('/admin_dashboard');
