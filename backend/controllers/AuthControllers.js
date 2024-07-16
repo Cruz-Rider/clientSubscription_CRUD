@@ -1,6 +1,10 @@
 const express = require("express");
+
+const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 const Admin = require("../models/Admin");
+
+require('dotenv').config();
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -16,9 +20,9 @@ const login = async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Successful login, send relevant data (e.g., a token)
-    // You might use libraries like JWT to generate tokens
-    res.status(200).json({ message: "Login Successful!" });
+    const payload = { id: admin.id };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({ message: "Login Successful!", token });
   } catch (err) {
     console.error("Error logging in admin:", err);
     res.status(500).json({ message: "Internal server error" });
@@ -26,5 +30,5 @@ const login = async (req, res) => {
 };
 
 module.exports = {
-    login,
+    login
 }

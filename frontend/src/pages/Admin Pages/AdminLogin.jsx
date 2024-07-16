@@ -18,7 +18,8 @@ const AdminLogin = () => {
         password,
       });
       
-      console.log('Login successful:', response.data);
+      console.log('Login successful:',  response.data);
+      localStorage.setItem("jwtToken", response.data.token);
       navigate('/admin_dashboard');
 
     } catch (error) {

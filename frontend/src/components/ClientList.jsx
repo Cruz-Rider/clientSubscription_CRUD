@@ -24,10 +24,16 @@ const ClientList = () => {
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
+      const token = localStorage.getItem('jwtToken');
 
       try {
         const response = await axios.get(
-          "http://localhost:2808/api/client"
+          "http://localhost:2808/api/client",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setClientData(response.data);
       } catch (err) {
